@@ -16,6 +16,8 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
 
+        MainActivity.releaseMediaPlayer();
+
     }
 
     public void openSongOne (View view){

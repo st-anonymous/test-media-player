@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,6 +18,12 @@ public class MainActivity extends AppCompatActivity {
     public static void setMediaPlayer(MediaPlayer mediaPlayer) {
         MainActivity.mediaPlayer = mediaPlayer;
     }
+    public static void releaseMediaPlayer(){
+        if(mediaPlayer != null){
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Button start = findViewById(R.id.start);
-        Button stop = findViewById(R.id.stop);
         Button pause = findViewById(R.id.pause);
         Button quit = findViewById(R.id.quit);
 
@@ -32,19 +38,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mediaPlayer.start();
-                stop.setVisibility(View.VISIBLE);
+                quit.setVisibility(View.VISIBLE);
                 pause.setVisibility(View.VISIBLE);
                 start.setVisibility(View.GONE);
-            }
-        });
-
-        stop.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mediaPlayer.stop();
-                stop.setVisibility(View.GONE);
-                pause.setVisibility(View.GONE);
-                start.setVisibility(View.VISIBLE);
             }
         });
 
@@ -52,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mediaPlayer.pause();
-                stop.setVisibility(View.VISIBLE);
+                quit.setVisibility(View.VISIBLE);
                 start.setVisibility(View.VISIBLE);
                 pause.setVisibility(View.GONE);
             }
@@ -68,6 +64,19 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        releaseMediaPlayer();
+
+        Button start = findViewById(R.id.start);
+        Button pause = findViewById(R.id.pause);
+        start.setVisibility(View.VISIBLE);
+        pause.setVisibility(View.GONE);
+
+    }
+    
 
     @Override
     public void onBackPressed() {
